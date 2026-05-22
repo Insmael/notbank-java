@@ -1,11 +1,11 @@
 package exchange.notbank.users.constants;
 
 public enum CivilStatus {
-  SOLTERO("soltero"),
-  CASADO("casado"),
-  CONVIVIENTE("conviviente"),
-  DIVORCIADO("divorciado"),
-  VIUDO("viudo");
+  SINGLE("soltero"),
+  MARRIED("casado"),
+  COHABITING("conviviente"),
+  DIVORCED("divorciado"),
+  WIDOWED("viudo");
 
   public final String value;
 
