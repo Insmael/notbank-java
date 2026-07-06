@@ -42,13 +42,13 @@ public class AddClientBankAccountParamBuilder implements ParamBuilder {
   }
 
   public AddClientBankAccountParamBuilder userId(UUID userId) {
-      this.params.put("user_id", userId);
-      return this;
+    this.params.put("user_id", userId);
+    return this;
   }
 
   public AddClientBankAccountParamBuilder userId(String userId) {
-      this.params.put("user_id", userId);
-      return this;
+    this.params.put("user_id", userId);
+    return this;
   }
 
   public Map<String, Object> getParams() {

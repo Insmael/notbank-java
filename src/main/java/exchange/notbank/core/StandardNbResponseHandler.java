@@ -20,8 +20,7 @@ public class StandardNbResponseHandler {
   public StandardNbResponseHandler(
       JsonAdapter<NbResponse> responseJsonAdapter,
       JsonAdapter<AuthErrorResponse> authErrorJsonAdapter,
-      JsonAdapter<NbErrorResponse> nbErrorJsonAdapter
-  ) {
+      JsonAdapter<NbErrorResponse> nbErrorJsonAdapter) {
     this.responseJsonAdapter = responseJsonAdapter;
     this.responseErrorJsonAdapter = nbErrorJsonAdapter;
     this.authErrorJsonAdapter = authErrorJsonAdapter;
@@ -32,46 +31,43 @@ public class StandardNbResponseHandler {
       return new StandardNbResponseHandler(
           moshi.adapter(NbResponse.class),
           moshi.adapter(AuthErrorResponse.class),
-          moshi.adapter(NbErrorResponse.class)
-      );
+          moshi.adapter(NbErrorResponse.class));
     }
   }
 
   public Either<NotbankException, String> handle(String jsonStr) {
-    var nbResponseOrAuthError = getError(jsonStr);
-    if (nbResponseOrAuthError.isEmpty()) {
+    var error = getError(jsonStr);
+    if (error.isEmpty()) {
       // means is not this kind of error, is another structure instead
-      try{
-          var nbError = responseErrorJsonAdapter.fromJson(jsonStr);
-          if (nbError != null && nbError.status != null && nbError.status.equals("error") ){
-              return Either.left(
-                  NotbankException.Factory.create(nbError)
-              );
-          }
-      }catch(IOException | JsonDataException e){
+      try {
+        var nbError = responseErrorJsonAdapter.fromJson(jsonStr);
+        if (nbError != null && nbError.status != null && nbError.status.equals("error")) {
           return Either.left(
-              NotbankException.Factory.create(
-                  NotbankException.ErrorType.JSON_FORMAT,
-                  "Error serializing following response error -> " + jsonStr
-              )
-          );
+              NotbankException.Factory.create(nbError));
+        }
+      } catch (IOException | JsonDataException e) {
+        return Either.left(
+            NotbankException.Factory.create(
+                NotbankException.ErrorType.JSON_FORMAT,
+                "Failed to serialize error from json " + jsonStr));
       }
       return Either.right(jsonStr);
     }
-    var actualError = nbResponseOrAuthError.get().get();
-    var error = NotbankException.Factory.create(actualError);
-    return Either.left(error);
+    if (error.get().isLeft()) {
+      var exception = NotbankException.Factory.create(error.get().getLeft());
+      return Either.left(exception);
+    }
+    var exception = NotbankException.Factory.create(error.get().get());
+    return Either.left(exception);
   }
 
   private Optional<Either<NbResponse, AuthErrorResponse>> getError(String jsonError) {
     try {
       var authResponse = authErrorJsonAdapter.fromJson(jsonError);
-      if (
-          authResponse != null
+      if (authResponse != null
           && authResponse.detail != null
-          && authResponse.detail.equals("Las credenciales de autenticación no se proveyeron.")
-      ){
-          return Optional.of(Either.right(authResponse));
+          && authResponse.detail.equals("Las credenciales de autenticación no se proveyeron.")) {
+        return Optional.of(Either.right(authResponse));
       }
       var standardResponse = responseJsonAdapter.fromJson(jsonError);
       var standardErrorResponse = responseErrorJsonAdapter.fromJson(jsonError);

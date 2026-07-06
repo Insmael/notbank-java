@@ -41,8 +41,6 @@ import exchange.notbank.trading.TradingService;
 import exchange.notbank.trading.TradingServiceResponseAdapter;
 import exchange.notbank.users.UserService;
 import exchange.notbank.users.UserServiceResponseAdapter;
-import exchange.notbank.utils.UtilsService;
-import exchange.notbank.utils.UtilsServiceResponseAdapter;
 import exchange.notbank.wallet.WalletService;
 import exchange.notbank.wallet.WalletServiceResponseAdapter;
 import exchange.notbank.yield.YieldService;
@@ -178,12 +176,9 @@ public class NotbankClientFactory {
     var subaccountService = new SubAccountService(
         () -> notbankConnectionInterceptor.apply(notbankConnection),
         new SubAccountResponseAdapter(moshi));
-    var utilsService = new UtilsService(
-      () -> notbankConnectionInterceptor.apply(notbankConnection),
-      new UtilsServiceResponseAdapter(moshi));
     var yieldService = new YieldService(
-      () -> notbankConnectionInterceptor.apply(notbankConnection),
-      new YieldServiceResponseAdapter(moshi));
+        () -> notbankConnectionInterceptor.apply(notbankConnection),
+        new YieldServiceResponseAdapter(moshi));
     return new NotbankClient(
         () -> notbankConnection,
         accountService,
@@ -198,8 +193,6 @@ public class NotbankClientFactory {
         quoteService,
         reportService,
         subaccountService,
-        utilsService,
-        yieldService
-    );
+        yieldService);
   }
 }

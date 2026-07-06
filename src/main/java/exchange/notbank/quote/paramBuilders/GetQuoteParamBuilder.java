@@ -19,13 +19,13 @@ public class GetQuoteParamBuilder implements ParamBuilder {
   }
 
   public GetQuoteParamBuilder userId(UUID userId) {
-      this.params.put("user_id", userId);
-      return this;
+    this.params.put("user_id", userId);
+    return this;
   }
 
   public GetQuoteParamBuilder userId(String userId) {
-      this.params.put("user_id", userId);
-      return this;
+    this.params.put("user_id", userId);
+    return this;
   }
 
   public Map<String, Object> getParams() {

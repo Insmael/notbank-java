@@ -13,4 +13,5 @@ public class Endpoints {
   public static final String FIAT_WITHDRAW = "wallet/fiat/withdrawal";
   public static final String TRANSFER_FUNDS = "wallet/transfer-funds";
   public static final String TRANSACTIONS = "wallet/transactions";
+  public static final String PROVINCES = "provinces";
 }

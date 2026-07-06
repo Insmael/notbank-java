@@ -39,8 +39,8 @@ public class QuoteServiceTest {
   public void createDirectQuote() {
     var futureResponse = client.getQuoteService().createDirectQuote(new CreateDirectQuoteParamBuilder(
         credentials.accountId,
-        "BTC",
-        new BigDecimal("1000"),
+        "CLP",
+        new BigDecimal("22000"),
         "USDT",
         QuoteOperation.BUY));
     TestHelper.checkNoError(futureResponse);
@@ -50,23 +50,23 @@ public class QuoteServiceTest {
   public void createInverseQuote() {
     var futureResponse = client.getQuoteService().createInverseQuote(new CreateInverseQuoteParamBuilder(
         credentials.accountId,
-        "BTC",
-        new BigDecimal("1000"),
-        "USDT"));
+        "USDT",
+        new BigDecimal("10000"),
+        "CLP"));
     TestHelper.checkNoError(futureResponse);
   }
 
 
     @Test
   public void getQuote() {
-    var futureResponse = client.getQuoteService().getQuote(new GetQuoteParamBuilder(UUID.fromString("7d9b3314-40a5-43cf-bb39-c75cd8689ce8")));
+    var futureResponse = client.getQuoteService().getQuote(new GetQuoteParamBuilder(UUID.fromString("58b173ff-0886-42ae-a2d3-772ceb8b9e8b")));
     TestHelper.checkNoError(futureResponse);
   }
 
 
     @Test
   public void executeQuote() {
-    var futureResponse = client.getQuoteService().executeQuote(new ExecuteQuoteParamBuilder(UUID.fromString("7d9b3314-40a5-43cf-bb39-c75cd8689ce8")));
+    var futureResponse = client.getQuoteService().executeQuote(new ExecuteQuoteParamBuilder(UUID.fromString("58b173ff-0886-42ae-a2d3-772ceb8b9e8b")));
     TestHelper.checkNoError(futureResponse);
   }
 
