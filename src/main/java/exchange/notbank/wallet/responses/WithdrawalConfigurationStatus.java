@@ -1,6 +1,5 @@
 package exchange.notbank.wallet.responses;
 
-import com.squareup.moshi.Json;
 
 public class WithdrawalConfigurationStatus {
   public final Boolean enabled;
