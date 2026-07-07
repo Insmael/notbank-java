@@ -1,20 +1,19 @@
-package exchange.notbank.utils.paramBuilders;
+package exchange.notbank.wallet.paramBuilders;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import exchange.notbank.core.HttpConfiguration;
 import exchange.notbank.core.ParamBuilder;
-import exchange.notbank.utils.constants.ProvinceCountry;
 
 public class GetProvincesParamBuilder implements ParamBuilder {
   protected final Map<String, Object> params;
   protected HttpConfiguration httpConfiguration;
 
-  public GetProvincesParamBuilder(ProvinceCountry country) {
+  public GetProvincesParamBuilder(String country) {
     this.httpConfiguration = new HttpConfiguration();
     this.params = new HashMap<>();
-    this.params.put("country", country.value);
+    this.params.put("country", country);
   }
 
   public Map<String, Object> getParams() {

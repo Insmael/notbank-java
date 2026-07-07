@@ -13,7 +13,8 @@ public class CreateDirectQuoteParamBuilder implements ParamBuilder {
   private final Map<String, Object> params;
   private HttpConfiguration httpConfiguration;
 
-  public CreateDirectQuoteParamBuilder(Integer accountId, String fromCurrency, BigDecimal fromAmount, String toCurrency, QuoteOperation operation) {
+  public CreateDirectQuoteParamBuilder(Integer accountId, String fromCurrency, BigDecimal fromAmount, String toCurrency,
+      QuoteOperation operation) {
     this.httpConfiguration = HttpConfiguration.empty();
     this.params = new HashMap<>();
     this.params.put("account_id", accountId);
@@ -24,13 +25,13 @@ public class CreateDirectQuoteParamBuilder implements ParamBuilder {
   }
 
   public CreateDirectQuoteParamBuilder userId(UUID userId) {
-      this.params.put("user_id", userId);
-      return this;
+    this.params.put("user_id", userId);
+    return this;
   }
 
   public CreateDirectQuoteParamBuilder userId(String userId) {
-      this.params.put("user_id", userId);
-      return this;
+    this.params.put("user_id", userId);
+    return this;
   }
 
   public Map<String, Object> getParams() {

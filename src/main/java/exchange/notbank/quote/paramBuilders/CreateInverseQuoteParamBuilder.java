@@ -23,13 +23,13 @@ public class CreateInverseQuoteParamBuilder implements ParamBuilder {
   }
 
   public CreateInverseQuoteParamBuilder userId(UUID userId) {
-      this.params.put("user_id", userId);
-      return this;
+    this.params.put("user_id", userId);
+    return this;
   }
 
   public CreateInverseQuoteParamBuilder userId(String userId) {
-      this.params.put("user_id", userId);
-      return this;
+    this.params.put("user_id", userId);
+    return this;
   }
 
   public Map<String, Object> getParams() {

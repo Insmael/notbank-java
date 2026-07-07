@@ -27,19 +27,19 @@ public class GetClientBankAccountsParamBuilder implements ParamBuilder {
     return this;
   }
 
-  public GetClientBankAccountsParamBuilder accountId(Integer accountId){
+  public GetClientBankAccountsParamBuilder accountId(Integer accountId) {
     this.params.put("account_id", accountId);
     return this;
   }
 
   public GetClientBankAccountsParamBuilder userId(UUID userId) {
-      this.params.put("user_id", userId);
-      return this;
+    this.params.put("user_id", userId);
+    return this;
   }
 
   public GetClientBankAccountsParamBuilder userId(String userId) {
-      this.params.put("user_id", userId);
-      return this;
+    this.params.put("user_id", userId);
+    return this;
   }
 
   public Map<String, Object> getParams() {

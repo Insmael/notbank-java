@@ -27,6 +27,7 @@ import exchange.notbank.wallet.paramBuilders.GetClientBankAccountsParamBuilder;
 import exchange.notbank.wallet.paramBuilders.GetBanksParamBuilder;
 import exchange.notbank.wallet.paramBuilders.GetDepositAddressesParamBuilder;
 import exchange.notbank.wallet.paramBuilders.GetOwnersFiatWithdrawParamBuilder;
+import exchange.notbank.wallet.paramBuilders.GetProvincesParamBuilder;
 import exchange.notbank.wallet.paramBuilders.GetTransactionsParamBuilder;
 import exchange.notbank.wallet.paramBuilders.GetWhitelistedAddressesParamBuilder;
 import exchange.notbank.wallet.paramBuilders.GetnetworksTemplatesParamBuilder;
@@ -39,6 +40,7 @@ import exchange.notbank.wallet.responses.BankAccounts;
 import exchange.notbank.wallet.responses.Banks;
 import exchange.notbank.wallet.responses.CbuOwner;
 import exchange.notbank.wallet.responses.CurrencyNetworkTemplates;
+import exchange.notbank.wallet.responses.Province;
 import exchange.notbank.wallet.responses.Transaction;
 import exchange.notbank.wallet.responses.WhitelistedAddress;
 import exchange.notbank.wallet.responses.WithdrawalConfigurationStatus;
@@ -247,5 +249,12 @@ public class WalletService {
    */
   public CompletableFuture<List<Transaction>> getTransactions(GetTransactionsParamBuilder paramBuilder) {
     return requestGet(Endpoints.TRANSACTIONS, paramBuilder, responseAdapter::toTransactionList);
+  }
+
+    /**
+   * https://apidoc.notbank.exchange/?http#getprovinces
+   */
+  public CompletableFuture<List<Province>> getProvinces(GetProvincesParamBuilder paramBuilder) {
+    return requestGet(Endpoints.PROVINCES, paramBuilder, responseAdapter::toProvinceList);
   }
 }

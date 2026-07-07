@@ -18,13 +18,16 @@ import exchange.notbank.wallet.responses.Banks;
 import exchange.notbank.wallet.responses.CbuOwner;
 import exchange.notbank.wallet.responses.CurrencyNetworkTemplates;
 import exchange.notbank.wallet.responses.IdResponse;
+import exchange.notbank.wallet.responses.Province;
 import exchange.notbank.wallet.responses.QrResponse;
 import exchange.notbank.wallet.responses.Transaction;
 import exchange.notbank.wallet.responses.UrlResponse;
 import exchange.notbank.wallet.responses.WhitelistedAddress;
 import exchange.notbank.wallet.responses.WithdrawalIdResponse;
 import exchange.notbank.wallet.responses.WithdrawalConfigurationStatus;
+import io.vavr.Tuple;
 import io.vavr.control.Either;
+import io.vavr.control.Try;
 
 public class WalletServiceResponseAdapter {
   private final ErrorHandler errorHandler;
@@ -42,6 +45,7 @@ public class WalletServiceResponseAdapter {
   private final JsonAdapter<DataResponse<WithdrawalIdResponse>> withdrawalIdResponseJsonAdapter;
   private final JsonAdapter<DataResponse<WithdrawalConfigurationStatus>> withdrawalConfigurationResponseJsonAdapter;
   private final JsonAdapter<DataResponse<List<Transaction>>> transactionListJsonAdapter;
+  private final JsonAdapter<DataResponse<List<List<String>>>> rawProvincesResponseJsonAdapter;
 
   public WalletServiceResponseAdapter(Moshi moshi) {
     this.errorHandler = ErrorHandler.Factory.createNbErrorHandler(moshi);
@@ -105,11 +109,15 @@ public class WalletServiceResponseAdapter {
     ParameterizedType qrResponseType = Types.newParameterizedType(
         DataResponse.class,
         QrResponse.class);
-    this.qrResponseJsonAdapter =moshi.adapter(qrResponseType);
+    this.qrResponseJsonAdapter = moshi.adapter(qrResponseType);
     ParameterizedType withdrawConfigurationResponseType = Types.newParameterizedType(
         DataResponse.class,
         WithdrawalConfigurationStatus.class);
     this.withdrawalConfigurationResponseJsonAdapter = moshi.adapter(withdrawConfigurationResponseType);
+    ParameterizedType RawProvinceAsListType = Types.newParameterizedType(List.class, String.class);
+    ParameterizedType RawProvinceListType = Types.newParameterizedType(List.class, RawProvinceAsListType);
+    ParameterizedType RawProvincesResponseType = Types.newParameterizedType(DataResponse.class, RawProvinceListType);
+    this.rawProvincesResponseJsonAdapter = moshi.adapter(RawProvincesResponseType);
   }
 
   public Either<NotbankException, Void> toNone(String jsonStr) {
@@ -153,12 +161,12 @@ public class WalletServiceResponseAdapter {
   }
 
   Either<NotbankException, Optional<String>> toOptionalUrlorQrResponse(String jsonStr) {
-      var urlresult = handle(jsonStr, urlResponseJsonAdapter);
-      if(urlresult.isLeft()){
-        return handle(jsonStr, qrResponseJsonAdapter).map(response -> response.data.qr).map(Optional::ofNullable);
-      }else{
-       return urlresult.map(response -> response.data.url).map(Optional::ofNullable);
-      }
+    var urlresult = handle(jsonStr, urlResponseJsonAdapter);
+    if (urlresult.isLeft()) {
+      return handle(jsonStr, qrResponseJsonAdapter).map(response -> response.data.qr).map(Optional::ofNullable);
+    } else {
+      return urlresult.map(response -> response.data.url).map(Optional::ofNullable);
+    }
   }
 
   Either<NotbankException, List<CbuOwner>> toCbuOwnerList(String jsonStr) {
@@ -179,4 +187,16 @@ public class WalletServiceResponseAdapter {
     return handle(jsonStr, withdrawalConfigurationResponseJsonAdapter).map(response -> response.data);
   }
 
+  public Either<NotbankException, List<Province>> toProvinceList(String jsonStr) {
+    return handle(jsonStr, rawProvincesResponseJsonAdapter)
+        .map(response -> response.data)
+        .map(data -> data.stream()
+            .filter(rawProvince -> rawProvince.size() == 2)
+            .map(rawProvince -> Tuple.of(
+                Try.of(() -> Integer.parseInt(rawProvince.get(0))).toJavaOptional(),
+                rawProvince.get(1)))
+            .filter(rawPovince -> rawPovince._1().isPresent())
+            .map(rawProvince -> new Province(rawProvince._1().get(), rawProvince._2()))
+            .toList());
+  }
 }
